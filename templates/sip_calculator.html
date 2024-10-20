@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>SIP Calculator</title>
+</head>
+<body>
+    <header>
+        <h1>SIP Calculator</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <form method="POST">
+            <label for="monthly_investment">Monthly Investment Amount:</label>
+            <input type="number" name="monthly_investment" required>
+            
+            <label for="interest_rate">Expected Annual Interest Rate (%):</label>
+            <input type="number" step="0.01" name="interest_rate" required>
+            
+            <label for="years">Investment Duration (Years):</label>
+            <input type="number" name="years" required>
+            
+            <button type="submit">Calculate</button>
+        </form>
+    </main>
+</body>
+</html>
