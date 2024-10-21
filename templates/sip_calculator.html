@@ -5,6 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>SIP Calculator</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #3f51b5;
+            padding: 1rem;
+            text-align: center;
+            color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-right: 1rem;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            padding: 2rem;
+        }
+
+        form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #3f51b5;
+        }
+
+        form input[type="number"] {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        form button {
+            background-color: #3f51b5;
+            color: white;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        form button:hover {
+            background-color: #2c3e8e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #3f51b5;
+            color: white;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            form {
+                padding: 1.5rem;
+            }
+
+            form input[type="number"] {
+                padding: 0.6rem;
+            }
+
+            form button {
+                padding: 0.6rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,16 +136,16 @@
     <main>
         <form method="POST">
             <label for="monthly_investment">Monthly Investment Amount:</label>
-            <input type="number" name="monthly_investment" required>
+            <input type="number" name="monthly_investment" placeholder="Enter amount (e.g. 5000)" required>
             
             <label for="interest_rate">Expected Annual Interest Rate (%):</label>
-            <input type="number" step="0.01" name="interest_rate" required>
+            <input type="number" step="0.01" name="interest_rate" placeholder="Enter rate (e.g. 12.5)" required>
             
             <label for="years">Investment Duration (Years):</label>
-            <input type="number" name="years" required>
+            <input type="number" name="years" placeholder="Enter years (e.g. 10)" required>
             
             <button type="submit">Calculate</button>
         </form>
     </main>
-</body>
-</html>
+    <footer>
+        © 2024 SIP Calculator | Plan Your Financial Future

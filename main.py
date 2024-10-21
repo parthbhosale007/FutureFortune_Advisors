@@ -1,6 +1,7 @@
 #       ||   SHREE   ||       #
 
-from flask import Flask, render_template, request
+
+from flask import Flask, render_template, request, url_for
 
 app = Flask(__name__)
 
@@ -22,6 +23,18 @@ def sip_calculator():
         return render_template('sip_result.html', future_value=round(future_value, 2))
 
     return render_template('sip_calculator.html')  # Render form if GET request
+
+@app.route('/chatbot')  # Chatbot page route
+def chatbot():
+    return render_template('chatbot.html')
+
+@app.route('/data_analysis')  # Chatbot page route
+def data_analysis():            
+    return render_template('data_analysis.html')
+
+@app.route('/contact')  # Chatbot page route
+def contact():
+    return render_template('contact.html')
 
 
 if __name__ == '__main__':
