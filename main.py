@@ -20,7 +20,7 @@ def sip_calculator():
         months = years * 12
         future_value = monthly_investment * (((1 + interest_rate / 12) ** months - 1) / (interest_rate / 12)) * (1 + interest_rate / 12)
         
-        return render_template('sip_result.html', future_value=round(future_value, 2))
+        return render_template('sip_result.html', future_value=round(future_value, 2), monthly_investment=monthly_investment, interest_rate = 100*interest_rate )
 
     return render_template('sip_calculator.html')  # Render form if GET request
 

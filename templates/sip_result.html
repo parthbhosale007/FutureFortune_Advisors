@@ -13,12 +13,12 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
+            background : linear-gradient( to right , #2575fc,  I#6a11cb );
             color: #333;
         }
 
         header {
-            background-color: #3f51b5;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
             padding: 1rem;
             text-align: center;
             color: white;
@@ -52,6 +52,11 @@
             align-items: center;
             min-height: 80vh;
             padding: 2rem;
+            /* margin-top: 50px; */
+            /* margin-bottom: 50px; */
+            margin-left: 500px;
+            margin-right: 50px;
+
         }
 
         form {
@@ -107,7 +112,7 @@
             header h1 {
                 font-size: 1.5rem;
             }
-            
+
             form {
                 padding: 1.5rem;
             }
@@ -120,23 +125,77 @@
                 padding: 0.6rem;
             }
         }
+
+        .container {
+            padding: 20px;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .result-box {
+            border-radius: 15px; /* Rounded corners */
+            padding: 50px; /* Padding inside the box */
+            color: white; /* Text color */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            transition: transform 0.2s; /* Animation effect */
+            background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
+            width: 100%; /* Full width for responsiveness */
+            max-width: 500px; /* Max width for desktop */
+            margin: 20px 0; /* Margin for spacing */
+        }
+
+        .result-box:hover {
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
+        .result-box h2 {
+            margin-bottom: 20px; /* Space below the title */
+        }
+
+        .result-box p {
+            margin: 10px 0; /* Space between paragraphs */
+            font-size: 1.2em; /* Larger font size for results */
+        }
+        @media (max-width: 600px) {
+        main {
+                margin-top: -50px; /* Adjust for smaller screens */
+            }
+        }
     </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>SIP Result</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
 </head>
 <body>
     <header>
         <h1>SIP Result</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/sip_calculator">Back to SIP Calculator</a></li>
-            </ul>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#page-top">FutureFortune Advisors</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#Services">Services</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
     <main>
-        <h2>Your Future Value</h2>
-        <p>The estimated future value of your investment is: <strong>₹{{ future_value }}</strong></p>
+        <div class="container">
+            <div class="result-box">
+                <h2>Your Investment Results:</h2>
+                <p>Amount Invested: <span id="invested-amount">{{monthly_investment}}</span></p>
+                <p>Interest Rate : <span id="total-value">{{interest_rate}}</span></p>
+                <p>Value of Estimated Return: <span id="estimated-returns"><strong>₹ {{future_value}}</strong></span></p>
+            </div>
+        </div>
     </main>
 </body>
 </html>
