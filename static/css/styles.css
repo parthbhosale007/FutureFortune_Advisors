@@ -250,6 +250,7 @@ sup {
   top: -0.5em;
 }
 
+
 a {
   color: var(--bs-link-color);
   text-decoration: underline;
@@ -263,6 +264,20 @@ a:not([href]):not([class]), a:not([href]):not([class]):hover {
   text-decoration: none;
 }
 
+#customLink.styledLink {
+  color: white;
+  background-color: #007bff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: inline-block; /* Ensures padding works correctly */
+}
+
+#customLink.styledLink:hover {
+  background-color: #0056b3; /* Darker on hover */
+  transform: scale(1.05);
+}
 pre,
 code,
 kbd,
