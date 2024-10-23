@@ -5,12 +5,13 @@ from flask import Flask, render_template, request, url_for , jsonify
 import os
 from google.cloud import dialogflow_v2 as dialogflow
 from google.oauth2 import service_account
+import uuid
 
 app = Flask(__name__)
 
 
 # Set path to your Dialogflow service account credentials
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "config.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "dialogueflow.json"
 
 # Initialize the Dialogflow session
 def detect_intent_texts(project_id, session_id, texts, language_code):
@@ -53,7 +54,7 @@ def chatbot():
  if request.method == 'POST':
     user_message = request.json.get('message')
     project_id = 'investmentadvisory-wjvw'
-    session_id = 'unique-session-id'  # You can set this to track conversations
+    session_id = str(uuid.uuid4())  # You can set this to track conversations
 
     response_text = detect_intent_texts(project_id, session_id, [user_message], 'en')
 
