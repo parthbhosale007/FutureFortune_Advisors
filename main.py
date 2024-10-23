@@ -1,9 +1,32 @@
 #       ||   SHREE   ||       #
 
 
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for , jsonify
+import os
+from google.cloud import dialogflow_v2 as dialogflow
+from google.oauth2 import service_account
 
 app = Flask(__name__)
+
+
+# Set path to your Dialogflow service account credentials
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "config.json"
+
+# Initialize the Dialogflow session
+def detect_intent_texts(project_id, session_id, texts, language_code):
+    session_client = dialogflow.SessionsClient()
+
+    session = session_client.session_path(project_id, session_id)
+
+    for text in texts:
+        text_input = dialogflow.types.TextInput(text=text, language_code=language_code)
+        query_input = dialogflow.types.QueryInput(text=text_input)
+
+        response = session_client.detect_intent(
+            session=session, query_input=query_input
+        )
+
+        return response.query_result.fulfillment_text
 
 @app.route('/')  # Home page route
 def home():
@@ -24,9 +47,19 @@ def sip_calculator():
 
     return render_template('sip_calculator.html')  # Render form if GET request
 
-@app.route('/chatbot')  # Chatbot page route
+
+@app.route('/chatbot', methods=['GET' , 'POST'])
 def chatbot():
-    return render_template('chatbot.html')
+ if request.method == 'POST':
+    user_message = request.json.get('message')
+    project_id = 'investmentadvisory-wjvw'
+    session_id = 'unique-session-id'  # You can set this to track conversations
+
+    response_text = detect_intent_texts(project_id, session_id, [user_message], 'en')
+
+    return jsonify({"response": response_text})
+    
+ return render_template('chatbot.html')
 
 @app.route('/data_analysis')  # Chatbot page route
 def data_analysis():            
