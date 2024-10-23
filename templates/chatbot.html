@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333; /* Dark background */
+            color: white; /* Default text color in dark theme */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            background-color: #444; /* Dark container background */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 1200px;
+            padding: 40px;
+        }
+
+        .chat-box {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #7b2929;
+            border-radius: 5px;
+        }
+
+        .user-message {
+            background-color: #5cb85c; /* Darker green for user messages */
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+            text-align: right;
+        }
+
+        .bot-response {
+            background-color: #007bff; /* Blue for bot responses */
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+            text-align: left;
+        }
+
+        .bot-typing {
+            font-style: italic;
+            color: gray;
+        }
+
+        .error {
+            color: red;
+            margin: 5px 0;
+        }
+
+        #chatbox {
+            width: 80%;  /* Adjust the width as needed */
+            height: 500px;  /* Adjust the height as needed */
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 40px;
+            margin: 0 auto;  /* Center the chatbox */
+            background-color: #f9f9f9;  /* Background color */
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.1);  /* Add a shadow for a better look */
+        }
+
+        .userInput {
+            width: 90%;  /* Adjust the input width */
+            height: 40px;  /* Input field height */
+            padding: 10px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #sendButton {
+            width: 100px;
+            height: 40px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
+
+        #voice-button {
+            width: 100px;
+            height: 40px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        #voice-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chatbox" class="chat-box">
+            <input type="text" class="userInput" placeholder="Type your message here..." />
+            <button id="sendButton">Send</button>
+            <button id="voice-button">🎤</button>
+            <div id="button-responses"></div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            function scrollToBottom() {
+                var chatBox = document.getElementById('chatbox');
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            $('#sendButton').click(function() {
+                var userMessage = $('.userInput').val();
+                $('#chatbox').append('<div class="user-message">' + userMessage + '</div>');
+                
+                $('#chatbox').append('<div class="bot-typing">Bot is typing...</div>');
+                
+                $.ajax({
+                    url: '/chatbot',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ "message": userMessage }),
+                    success: function(response) {
+                        $('.bot-typing').remove();
+                        if (response.buttons) {
+                            $('#button-responses').empty();
+                            response.buttons.forEach(function(button) {
+                                $('#button-responses').append('<button class="response-button">' + button + '</button>');
+                            });
+                        } else {
+                            $('#chatbox').append('<div class="bot-response">' + response.response + '</div>');
+                        }
+                        scrollToBottom();
+                    },
+                    error: function(xhr) {
+                        $('.bot-typing').remove();
+                        if (xhr.status === 404) {
+                            $('#chatbox').append('<div class="error">Error: Not found.</div>');
+                        } else if (xhr.status === 500) {
+                            $('#chatbox').append('<div class="error">Error: Server error.</div>');
+                        } else {
+                            $('#chatbox').append('<div class="error">Error: Could not get response from the chatbot.</div>');
+                        }
+                        scrollToBottom();
+                    }
+                });
+                
+                $('.userInput').val('');  // Clear input field
+            });
+
+            // Voice recognition
+            $('#voice-button').click(function() {
+                var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.onresult = function(event) {
+                    var voiceMessage = event.results[0][0].transcript;
+                    $('.userInput').val(voiceMessage);
+                    $('#sendButton').click();
+                };
+                recognition.start();
+            });
+
+            // Optional: Send message on pressing Enter key
+            $('.userInput').keypress(function(event) {
+                if (event.which === 13) {
+                    $('#sendButton').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
