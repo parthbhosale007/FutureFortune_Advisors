@@ -13,8 +13,8 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background : linear-gradient( to right , #2575fc,  I#6a11cb );
-            color: #333;
+            background: url('{{ url_for("static", filename="assets/img/sipcalcpromt.jpg") }}') no-repeat center center fixed; /* Background image added here */
+            background-size: cover;
         }
 
         header {
@@ -52,11 +52,8 @@
             align-items: center;
             min-height: 80vh;
             padding: 2rem;
-            /* margin-top: 50px; */
-            /* margin-bottom: 50px; */
             margin-left: 500px;
             margin-right: 50px;
-
         }
 
         form {
@@ -156,8 +153,9 @@
             margin: 10px 0; /* Space between paragraphs */
             font-size: 1.2em; /* Larger font size for results */
         }
+
         @media (max-width: 600px) {
-        main {
+            main {
                 margin-top: -50px; /* Adjust for smaller screens */
             }
         }
@@ -172,7 +170,7 @@
         <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
             <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#page-top">FutureFortune Advisors</a>
+                <a class="navbar-brand" href="/">FutureFortune Advisors</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>

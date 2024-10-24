@@ -71,5 +71,22 @@ def contact():
     return render_template('contact.html')
 
 
+stocks = [
+    {"id": 1, "name": "Apple Inc.", "symbol": "AAPL", "price": 150, "slug": "apple"},
+    {"id": 2, "name": "Microsoft Corp.", "symbol": "MSFT", "price": 300, "slug": "microsoft"},
+    {"id": 3, "name": "Google LLC", "symbol": "GOOGL", "price": 2800, "slug": "google"},
+    {"id": 4, "name": "Amazon.com Inc.", "symbol": "AMZN", "price": 3500, "slug": "amazon"},
+]
+
+@app.route('/stocks')
+def stock_list():
+    return render_template('stocks.html', stocks=stocks)
+
+@app.route('/stock/<string:post_slug>')
+def stock_detail(post_slug):
+    stock = next((s for s in stocks if s['slug'] == post_slug), None)
+    return render_template('stock_detail.html', stock=stock)
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True , host='0.0.0.0' ,port=6000)
