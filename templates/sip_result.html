@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: url('{{ url_for("static", filename="assets/img/sipcalcpromt.jpg") }}') no-repeat center center fixed; /* Background image added here */
+            background: url('{{ url_for("static", filename="assets/img/sipcalcpromt.jpg") }}') no-repeat center center fixed; 
             background-size: cover;
         }
 
@@ -52,8 +52,6 @@
             align-items: center;
             min-height: 80vh;
             padding: 2rem;
-            margin-left: 500px;
-            margin-right: 50px;
         }
 
         form {
@@ -110,6 +108,10 @@
                 font-size: 1.5rem;
             }
 
+            main {
+                padding: 1rem;
+            }
+
             form {
                 padding: 1.5rem;
             }
@@ -121,6 +123,18 @@
             form button {
                 padding: 0.6rem;
             }
+
+            .result-box {
+                padding: 30px;
+            }
+
+            .result-box h2 {
+                font-size: 1.5em;
+            }
+
+            .result-box p {
+                font-size: 1em;
+            }
         }
 
         .container {
@@ -130,34 +144,28 @@
         }
 
         .result-box {
-            border-radius: 15px; /* Rounded corners */
-            padding: 50px; /* Padding inside the box */
-            color: white; /* Text color */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-            transition: transform 0.2s; /* Animation effect */
-            background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
-            width: 100%; /* Full width for responsiveness */
-            max-width: 500px; /* Max width for desktop */
-            margin: 20px 0; /* Margin for spacing */
+            border-radius: 15px; 
+            padding: 50px; 
+            color: white; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+            transition: transform 0.2s; 
+            background: linear-gradient(to right, #6a11cb, #2575fc); 
+            width: 100%; 
+            max-width: 500px; 
+            margin: 20px 0; 
         }
 
         .result-box:hover {
-            transform: scale(1.05); /* Slightly enlarge on hover */
+            transform: scale(1.05); 
         }
 
         .result-box h2 {
-            margin-bottom: 20px; /* Space below the title */
+            margin-bottom: 20px; 
         }
 
         .result-box p {
-            margin: 10px 0; /* Space between paragraphs */
-            font-size: 1.2em; /* Larger font size for results */
-        }
-
-        @media (max-width: 600px) {
-            main {
-                margin-top: -50px; /* Adjust for smaller screens */
-            }
+            margin: 10px 0; 
+            font-size: 1.2em; 
         }
     </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -195,5 +203,8 @@
             </div>
         </div>
     </main>
+    <footer>
+        <p>© 2024 FutureFortune Advisors.</p>
+    </footer>
 </body>
 </html>

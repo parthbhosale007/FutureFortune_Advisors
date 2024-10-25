@@ -49,7 +49,7 @@
                 vAxis: { textStyle: {color: '#E0E0E0'} },
                 backgroundColor: '#2B2B2B',
                 colors: ['#FF7043', '#29B6F6', '#66BB6A', '#FFA726'],
-                width: 700,
+                width: '100%',  // Set width to 100% for responsiveness
                 height: 400,
                 titleTextStyle: {color: '#E0E0E0'}
             };
@@ -82,8 +82,8 @@
         }
         .chart-container {
             display: flex;
-            align-items: flex-start;
-            padding: 20px;
+            flex-direction: column; /* Stack charts and summaries on smaller screens */
+            padding: 30px;
             background-color: #2B2B2B;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             border-radius: 12px;
@@ -91,13 +91,15 @@
         }
         .chart {
             flex: 2;
+            width: 100%;  /* Set chart to take full width */
+            height: auto; /* Adjust height automatically */
         }
         .summary {
             flex: 1;
             padding: 15px;
             background-color: #1E1E1E;
             border-radius: 12px;
-            margin-left: 20px;
+            margin-top: 20px; /* Margin for spacing when stacked */
             color: #B0BEC5;
             font-size: 1rem;
             line-height: 1.5;
@@ -105,6 +107,17 @@
         .summary p {
             margin: 0;
             padding: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 600px) {
+            .chart-container {
+                flex-direction: row; /* Arrange side by side on larger screens */
+            }
+            .summary {
+                margin-left: 20px; /* Add space between chart and summary */
+                margin-top: 0; /* Reset margin when side by side */
+            }
         }
     </style>
 </head>
