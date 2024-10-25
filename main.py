@@ -1,188 +1,147 @@
-#       ||   SHREE   ||       #
-
-
-from flask import Flask, render_template, request, url_for , jsonify
+from flask import Flask, render_template, request, jsonify
 import os
-from google.cloud import dialogflow_v2 as dialogflow
-from google.oauth2 import service_account
+import json
 import uuid
+from google.cloud import dialogflow_v2 as dialogflow
+from bsedata.bse import BSE
+import pandas as pd
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
+# Load configuration
+with open('dialogueflow.json') as config_file:
+    config = json.load(config_file)
+    api_key = config.get("ALPHA_VANTAGE_API_KEY")
 
 # Set path to your Dialogflow service account credentials
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "dialogueflow.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "dialogflow.json"
 
 # Initialize the Dialogflow session
 def detect_intent_texts(project_id, session_id, texts, language_code):
     session_client = dialogflow.SessionsClient()
-
     session = session_client.session_path(project_id, session_id)
 
     for text in texts:
         text_input = dialogflow.types.TextInput(text=text, language_code=language_code)
         query_input = dialogflow.types.QueryInput(text=text_input)
 
-        response = session_client.detect_intent(
-            session=session, query_input=query_input
-        )
-
+        response = session_client.detect_intent(session=session, query_input=query_input)
         return response.query_result.fulfillment_text
 
-@app.route('/')  # Home page route
+@app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/sip_calculator', methods=['GET', 'POST'])  # SIP Calculator route
+@app.route('/sip_calculator', methods=['GET', 'POST'])
 def sip_calculator():
-    if request.method == 'POST':  # Form submission
+    if request.method == 'POST':
         monthly_investment = float(request.form['monthly_investment'])
-        interest_rate = float(request.form['interest_rate']) / 100  # Convert to decimal
+        interest_rate = float(request.form['interest_rate']) / 100
         years = int(request.form['years'])
         
         # Calculate future value
         months = years * 12
         future_value = monthly_investment * (((1 + interest_rate / 12) ** months - 1) / (interest_rate / 12)) * (1 + interest_rate / 12)
         
-        return render_template('sip_result.html', future_value=round(future_value, 2), monthly_investment=monthly_investment, interest_rate = 100*interest_rate )
+        return render_template('sip_result.html', future_value=round(future_value, 2), monthly_investment=monthly_investment, interest_rate=100 * interest_rate)
 
-    return render_template('sip_calculator.html')  # Render form if GET request
+    return render_template('sip_calculator.html')
 
-
-@app.route('/chatbot', methods=['GET' , 'POST'])
+@app.route('/chatbot', methods=['GET', 'POST'])
 def chatbot():
- if request.method == 'POST':
-    user_message = request.json.get('message')
-    project_id = 'investmentadvisory-wjvw'
-    session_id = str(uuid.uuid4())  # You can set this to track conversations
-
-    response_text = detect_intent_texts(project_id, session_id, [user_message], 'en')
-
-    return jsonify({"response": response_text})
+    if request.method == 'POST':
+        user_message = request.json.get('message')
+        project_id = 'investmentadvisory-wjvw'
+        session_id = str(uuid.uuid4())
+        response_text = detect_intent_texts(project_id, session_id, [user_message], 'en')
+        return jsonify({"response": response_text})
     
- return render_template('chatbot.html')
+    return render_template('chatbot.html')
 
-@app.route('/data_analysis')  # Chatbot page route
-def data_analysis():            
+@app.route('/data_analysis')
+def data_analysis():
     return render_template('data_analysis.html')
 
-@app.route('/contact')  # Chatbot page route
+@app.route('/contact')
 def contact():
     return render_template('contact.html')
 
+# Initialize BSE and prepare for fetching stock data
+b = BSE(update_codes=True)
+compscrips = ["512026", "538537", "532139", "532336", "533676", "520073", "505725", "539843", "539785", "542383", "520086", "506808", "500337", "533022", "532529", "523606", "507155", "509438", "522229", "500207", "500530", "542727", "500429", "508807", "517354", "538970", "539201", "540133", "532432", "515043", "524709", "500124", "507753", "532937", "511605", "538635", "511676", "532461", "539254", "540145", "508954", "540425", "500173", "520119", "500193", "530023", "516030", "500268", "500264", "500490", "500093", "539290", "506197", "532906", "533193", "532729", "532610", "511243", "533156", "508933", "526725", "511218", "500420", "532343", "533148", "539018", "532686", "540649", "522029", "524774", "533336", "524648", "532067", "526608", "516064", "532616", "507789", "501298", "500280", "500087", "532794", "519105", "532842", "534748", "530075", "531426", "541276", "500119", "520008", "532323", "520059", "539042", "524520", "533477", "532134", "532741", "532515", "530699", "524394", "542684", "532348", "506390", "505200", "531449", "511333", "539660", "531847", "500402", "526650", "590062", "504084", "532457", "590115", "519602", "542669", "522295", "539221", "501150", "502180", "531633", "502175", "506618", "500439", "540125", "530355", "500136", "532424", "500547", "511413", "517334", "541741", "532955", "500400", "540717", "532155", "511076", "500425", "500825", "524280", "503031", "523838", "534328", "522073", "505400", "590134", "532345", "511628", "531859", "539469", "522108", "506194", "505163", "532370", "505036", "523736", "500306", "532810", "532661", "590065", "524109", "540980", "507410", "532633", "523708", "532240", "590030", "513517", "517421", "531092", "530307", "507526", "530011", "500414", "532365", "507944", "506685", "539594", "531921", "538920", "500440", "540777", "540776", "532488", "506642", "514043", "531179", "533761", "532875", "530879", "541269", "532742", "506248", "523207", "532650", "508906", "540795", "500002", "530131", "524332", "517500"]
 
-stocks = [
-    {"id": 1, "name": "Apple Inc.", "symbol": "AAPL", "price": 150, "slug": "apple"},
-    {"id": 2, "name": "Microsoft Corp.", "symbol": "MSFT", "price": 300, "slug": "microsoft"},
-    {"id": 3, "name": "Google LLC", "symbol": "GOOGL", "price": 2800, "slug": "google"},
-    {"id": 4, "name": "Amazon.com Inc.", "symbol": "AMZN", "price": 3500, "slug": "amazon"},
-    {"id": 5, "name": "Facebook Inc.", "symbol": "FB", "price": 340, "slug": "facebook"},
-    {"id": 6, "name": "Tesla Inc.", "symbol": "TSLA", "price": 730, "slug": "tesla"},
-    {"id": 7, "name": "Berkshire Hathaway", "symbol": "BRK.A", "price": 411000, "slug": "berkshire"},
-    {"id": 8, "name": "NVIDIA Corporation", "symbol": "NVDA", "price": 220, "slug": "nvidia"},
-    {"id": 9, "name": "Visa Inc.", "symbol": "V", "price": 235, "slug": "visa"},
-    {"id": 10, "name": "Johnson & Johnson", "symbol": "JNJ", "price": 160, "slug": "johnson-johnson"},
-    {"id": 11, "name": "Walmart Inc.", "symbol": "WMT", "price": 140, "slug": "walmart"},
-    {"id": 12, "name": "Mastercard Inc.", "symbol": "MA", "price": 365, "slug": "mastercard"},
-    {"id": 13, "name": "Procter & Gamble", "symbol": "PG", "price": 145, "slug": "procter-gamble"},
-    {"id": 14, "name": "UnitedHealth Group", "symbol": "UNH", "price": 400, "slug": "unitedhealth"},
-    {"id": 15, "name": "Home Depot", "symbol": "HD", "price": 325, "slug": "home-depot"},
-    {"id": 16, "name": "Intel Corp.", "symbol": "INTC", "price": 55, "slug": "intel"},
-    {"id": 17, "name": "Coca-Cola Co.", "symbol": "KO", "price": 60, "slug": "coca-cola"},
-    {"id": 18, "name": "PepsiCo Inc.", "symbol": "PEP", "price": 150, "slug": "pepsico"},
-    {"id": 19, "name": "Cisco Systems", "symbol": "CSCO", "price": 45, "slug": "cisco"},
-    {"id": 20, "name": "Adobe Inc.", "symbol": "ADBE", "price": 530, "slug": "adobe"},
-    {"id": 21, "name": "Netflix Inc.", "symbol": "NFLX", "price": 550, "slug": "netflix"},
-    {"id": 22, "name": "Pfizer Inc.", "symbol": "PFE", "price": 38, "slug": "pfizer"},
-    {"id": 23, "name": "PayPal Holdings", "symbol": "PYPL", "price": 225, "slug": "paypal"},
-    {"id": 24, "name": "Comcast Corp.", "symbol": "CMCSA", "price": 50, "slug": "comcast"},
-    {"id": 25, "name": "Verizon Comm.", "symbol": "VZ", "price": 57, "slug": "verizon"},
-    {"id": 26, "name": "Toyota Motor Corp.", "symbol": "TM", "price": 180, "slug": "toyota"},
-    {"id": 27, "name": "AT&T Inc.", "symbol": "T", "price": 30, "slug": "att"},
-    {"id": 28, "name": "ExxonMobil Corp.", "symbol": "XOM", "price": 90, "slug": "exxonmobil"},
-    {"id": 29, "name": "Chevron Corp.", "symbol": "CVX", "price": 100, "slug": "chevron"},
-    {"id": 30, "name": "Shell plc", "symbol": "SHEL", "price": 45, "slug": "shell"},
-    {"id": 31, "name": "Alibaba Group", "symbol": "BABA", "price": 160, "slug": "alibaba"},
-    {"id": 32, "name": "Samsung Electronics", "symbol": "SSNLF", "price": 80, "slug": "samsung"},
-    {"id": 33, "name": "Unilever plc", "symbol": "UL", "price": 55, "slug": "unilever"},
-    {"id": 34, "name": "British American Tobacco", "symbol": "BTI", "price": 36, "slug": "british-american-tobacco"},
-    {"id": 35, "name": "Sony Corporation", "symbol": "SONY", "price": 115, "slug": "sony"},
-    {"id": 36, "name": "SoftBank Group", "symbol": "SFTBY", "price": 21, "slug": "softbank"},
-    {"id": 37, "name": "BlackRock Inc.", "symbol": "BLK", "price": 850, "slug": "blackrock"},
-    {"id": 38, "name": "Boeing Co.", "symbol": "BA", "price": 210, "slug": "boeing"},
-    {"id": 39, "name": "Morgan Stanley", "symbol": "MS", "price": 75, "slug": "morgan-stanley"},
-    {"id": 40, "name": "Delta Air Lines", "symbol": "DAL", "price": 39, "slug": "delta"},
-    {"id": 41, "name": "Ford Motor Co.", "symbol": "F", "price": 20, "slug": "ford"},
-    {"id": 42, "name": "General Motors", "symbol": "GM", "price": 45, "slug": "gm"},
-    {"id": 43, "name": "Goldman Sachs", "symbol": "GS", "price": 330, "slug": "goldman-sachs"},
-    {"id": 44, "name": "Zoom Video Comm.", "symbol": "ZM", "price": 340, "slug": "zoom"},
-    {"id": 45, "name": "Tencent Holdings", "symbol": "TCEHY", "price": 75, "slug": "tencent"},
-    {"id": 46, "name": "Shopify Inc.", "symbol": "SHOP", "price": 950, "slug": "shopify"},
-    {"id": 47, "name": "Salesforce Inc.", "symbol": "CRM", "price": 225, "slug": "salesforce"},
-    {"id": 48, "name": "Texas Instruments", "symbol": "TXN", "price": 185, "slug": "texas-instruments"},
-    {"id": 49, "name": "Qualcomm Inc.", "symbol": "QCOM", "price": 130, "slug": "qualcomm"},
-    {"id": 50, "name": "Square Inc.", "symbol": "SQ", "price": 200, "slug": "square"},
-    {"id": 51, "name": "Snap Inc.", "symbol": "SNAP", "price": 50, "slug": "snap"},
-    {"id": 52, "name": "Intuit Inc.", "symbol": "INTU", "price": 400, "slug": "intuit"},
-    {"id": 53, "name": "Activision Blizzard", "symbol": "ATVI", "price": 95, "slug": "activision"},
-    {"id": 54, "name": "Uber Technologies", "symbol": "UBER", "price": 45, "slug": "uber"},
-    {"id": 55, "name": "Pinterest Inc.", "symbol": "PINS", "price": 55, "slug": "pinterest"},
-    {"id": 56, "name": "Palantir Tech.", "symbol": "PLTR", "price": 28, "slug": "palantir"},
-    {"id": 57, "name": "Lyft Inc.", "symbol": "LYFT", "price": 35, "slug": "lyft"},
-    {"id": 58, "name": "ServiceNow Inc.", "symbol": "NOW", "price": 550, "slug": "servicenow"},
-    {"id": 59, "name": "Spotify Tech.", "symbol": "SPOT", "price": 235, "slug": "spotify"},
-    {"id": 60, "name": "Airbnb Inc.", "symbol": "ABNB", "price": 155, "slug": "airbnb"},
-    {"id": 61, "name": "DoorDash Inc.", "symbol": "DASH", "price": 165, "slug": "doordash"},
-    {"id": 62, "name": "Roku Inc.", "symbol": "ROKU", "price": 115, "slug": "roku"},
-    {"id": 63, "name": "Datadog Inc.", "symbol": "DDOG", "price": 125, "slug": "datadog"},
-    {"id": 64, "name": "CrowdStrike", "symbol": "CRWD", "price": 230, "slug": "crowdstrike"},
-    {"id": 65, "name": "Snowflake Inc.", "symbol": "SNOW", "price": 350, "slug": "snowflake"},
-    {"id": 66, "name": "DocuSign Inc.", "symbol": "DOCU", "price": 230, "slug": "docusign"},
-    {"id": 67, "name": "Robinhood Markets", "symbol": "HOOD", "price": 20, "slug": "robinhood"},
-    {"id": 68, "name": "Beyond Meat", "symbol": "BYND", "price": 110, "slug": "beyond-meat"},
-    {"id": 69, "name": "Twilio Inc.", "symbol": "TWLO", "price": 300, "slug": "twilio"},
-    {"id": 70, "name": "Etsy Inc.", "symbol": "ETSY", "price": 160, "slug": "etsy"},
-    {"id": 71, "name": "Carvana Co.", "symbol": "CVNA", "price": 170, "slug": "carvana"},
-    {"id": 72, "name": "Slack Technologies", "symbol": "WORK", "price": 40, "slug": "slack"},
-    {"id": 73, "name": "Peloton Interactive", "symbol": "PTON", "price": 90, "slug": "peloton"},
-    {"id": 74, "name": "ZoomInfo Tech.", "symbol": "ZI", "price": 75, "slug": "zoominfo"},
-    {"id": 75, "name": "Coinbase Global", "symbol": "COIN", "price": 250, "slug": "coinbase"},
-    {"id": 76, "name": "Robinhood Markets", "symbol": "HOOD", "price": 20, "slug": "robinhood"},
-    {"id": 77, "name": "Wayfair Inc.", "symbol": "W", "price": 175, "slug": "wayfair"},
-    {"id": 78, "name": "Chewy Inc.", "symbol": "CHWY", "price": 90, "slug": "chewy"},
-    {"id": 79, "name": "GameStop Corp.", "symbol": "GME", "price": 180, "slug": "gamestop"},
-    {"id": 80, "name": "Moderna Inc.", "symbol": "MRNA", "price": 210, "slug": "moderna"},
-    {"id": 81, "name": "Carnival Corp.", "symbol": "CCL", "price": 22, "slug": "carnival"},
-    {"id": 82, "name": "AMC Entertainment", "symbol": "AMC", "price": 13, "slug": "amc"},
-    {"id": 83, "name": "Virgin Galactic", "symbol": "SPCE", "price": 25, "slug": "virgin-galactic"},
-    {"id": 84, "name": "Wynn Resorts", "symbol": "WYNN", "price": 100, "slug": "wynn"},
-    {"id": 85, "name": "DoorDash Inc.", "symbol": "DASH", "price": 165, "slug": "doordash"},
-    {"id": 86, "name": "Okta Inc.", "symbol": "OKTA", "price": 240, "slug": "okta"},
-    {"id": 87, "name": "Square Inc.", "symbol": "SQ", "price": 200, "slug": "square"},
-    {"id": 88, "name": "Baidu Inc.", "symbol": "BIDU", "price": 185, "slug": "baidu"},
-    {"id": 89, "name": "Bilibili Inc.", "symbol": "BILI", "price": 60, "slug": "bilibili"},
-    {"id": 90, "name": "JD.com Inc.", "symbol": "JD", "price": 65, "slug": "jd"},
-    {"id": 91, "name": "Tencent Music", "symbol": "TME", "price": 12, "slug": "tencent-music"},
-    {"id": 92, "name": "Weibo Corp.", "symbol": "WB", "price": 53, "slug": "weibo"},
-    {"id": 93, "name": "Meituan", "symbol": "3690.HK", "price": 245, "slug": "meituan"},
-    {"id": 94, "name": "Xiaomi Corp.", "symbol": "1810.HK", "price": 22, "slug": "xiaomi"},
-    {"id": 95, "name": "Huawei Tech.", "symbol": "HWTL", "price": 90, "slug": "huawei"},
-    {"id": 96, "name": "TikTok", "symbol": "TIKTOK", "price": 50, "slug": "tiktok"},
-    {"id": 97, "name": "ByteDance Ltd.", "symbol": "BD", "price": 250, "slug": "bytedance"},
-    {"id": 98, "name": "Dell Technologies", "symbol": "DELL", "price": 90, "slug": "dell"},
-    {"id": 99, "name": "ASML Holding", "symbol": "ASML", "price": 725, "slug": "asml"},
-    {"id": 100, "name": "IBM Corp.", "symbol": "IBM", "price": 125, "slug": "ibm"}
-]
 
 @app.route('/stocks')
 def stock_list():
-    return render_template('stocks.html', stocks=stocks)
+    stocks = [ ]  # Clear the stocks list before each request
+    for key in compscrips:
+        try:
+            quote = b.getQuote(key)
+            stocks.append({
+                'id': len(stocks) + 1,
+                'name': quote["companyName"],
+                'price': quote["currentValue"],
+                'scripcode': quote["scripCode"]
+            })
+        except Exception as e:
+            print(f"Error fetching data for scrip code {key}: {e}")
+
+    return render_template("stocks.html", stocks=stocks)
 
 @app.route('/stock/<string:post_slug>')
 def stock_detail(post_slug):
-    stock = next((s for s in stocks if s['slug'] == post_slug), None)
-    return render_template('stock_detail.html', stock=stock)
+    return render_template("stock_detail.html")
 
+@app.route('/generate_stock_graph')
+def generate_stock_graph():
+    # Define companies and date range
+    companies = ["Apple Inc. (AAPL)", "Microsoft Corporation (MSFT)", 
+                 "Alphabet Inc. (GOOGL)", "Amazon.com Inc. (AMZN)"]
+    months = pd.date_range(start="2022-01-01", periods=24, freq="M")
+
+    # Define the exact stock prices used in the plot
+    data = {
+        "Apple Inc. (AAPL)": [97.82, 101.88, 104.01, 110.39, 112.31, 108.96,
+                              113.04, 116.65, 113.88, 115.32, 117.40, 115.34,
+                              118.48, 122.87, 124.35, 124.54, 123.98, 126.87,
+                              122.08, 119.50, 120.42, 117.54, 121.37, 123.72],
+        "Microsoft Corporation (MSFT)": [134.42, 130.32, 132.18, 136.22, 140.45, 138.52,
+                                          140.89, 143.96, 146.77, 143.15, 145.20, 148.72,
+                                          150.91, 153.98, 156.16, 158.45, 160.17, 162.43,
+                                          165.33, 163.82, 166.05, 168.65, 170.86, 173.00],
+        "Alphabet Inc. (GOOGL)": [62.13, 63.90, 66.44, 68.58, 67.76, 70.66,
+                                  73.35, 74.03, 75.87, 76.64, 78.72, 79.52,
+                                  81.49, 83.60, 86.15, 87.80, 88.61, 91.47,
+                                  90.62, 92.94, 94.07, 96.12, 98.42, 100.48],
+        "Amazon.com Inc. (AMZN)": [178.98, 176.09, 179.90, 181.96, 185.79, 188.58,
+                                   192.32, 193.75, 195.95, 198.68, 200.57, 203.62,
+                                   205.56, 208.79, 210.53, 213.87, 215.68, 218.37,
+                                   219.99, 222.57, 225.99, 228.12, 231.27, 233.43]
+    }
+
+    # Create DataFrame for stock prices
+    df = pd.DataFrame(data, index=months)
+
+    # Plotting
+    plt.figure(figsize=(12, 6))
+    for company in companies:
+        plt.plot(df.index, df[company], label=company, marker='o')  # Plot each company's prices
+
+    # Customize the plot
+    plt.title("Stock Prices Over the Last 2 Years (Monthly Data)")
+    plt.xlabel("Date")
+    plt.ylabel("Stock Price (USD)")
+    plt.legend(title="Companies")
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    plt.tight_layout()
+
+    # Save the plot to an image file
+    plt.savefig("static/graph.png")  # Save the image to the static directory
+    plt.close()  # Close the plot to free up memory
+
+    return jsonify({"status": "success", "image": "static/graph.png"})
 
 if __name__ == '__main__':
     app.run(debug=True)

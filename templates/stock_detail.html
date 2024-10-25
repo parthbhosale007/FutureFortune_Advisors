@@ -66,9 +66,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#services">Services</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#footer">Contact</a></li>
                     </ul>
                 </div>
             </div>
@@ -77,8 +77,12 @@
 
     <div class="content-container">
         <div class="details-box">
-            <h1>{{ stock.name }} ({{ stock.symbol }})</h1>
-            <p>Current Price: ${{ stock.price }}</p>
+            {% if stock %}
+            <h1>{{ stock.full_name }} ({{ stock.symbol }}) Stock Details</h1>
+            <p>Latest Close: ${{ stock.latest_close }}</p>
+            {% else %}
+            <h1>Stock not found</h1>
+        {% endif %}
             <a href="{{ url_for('stock_list') }}" class="btn btn-primary">Back to all Stocks</a>
         </div>
     </div>

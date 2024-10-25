@@ -17,8 +17,7 @@
 </head>
 <body id="page-top">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav"  >
-     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" /></style> 
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="#page-top">FutureFortune Advisors</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,13 +76,12 @@
                             <h4>SIP Calculator</h4>
                         </a>
                         <div style="height: 50px;"></div>
-
                         <p class="text-black-50 mb-0">Our SIP calculator estimates future investment value based on monthly contributions, expected returns, and investment duration!</p>
                     </div>
                 </div>
             </div>
-            <!-- AI Chatbot Row -->
 
+            <!-- AI Chatbot Row -->
             <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
                 <div class="col-xl-8 col-lg-7">
                     <img class="img-fluid mb-3 mb-lg-0" src="{{ url_for('static', filename='assets/img/AI-Chatbots.jpg') }}" alt="AI Chatbot" />
@@ -93,12 +91,12 @@
                         <a href="/chatbot" class="styledLink" id="customLink">
                            <h4>AI Chatbot</h4>
                         </a>
-                        <div style="height: 50px;"></div> 
-
+                        <div style="height: 50px;"></div>
                         <p class="text-black-50 mb-0">Our AI chatbot assists with investment and insurance queries, offering personalized guidance and instant support for all your needs.</p>
                     </div>
                 </div>
             </div>
+
             <!-- Data Driven Graphs Row -->
             <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
                 <div class="col-xl-8 col-lg-7">
@@ -109,101 +107,63 @@
                         <a href="/data_analysis" class="styledLink" id="customLink">
                             <h4>Data Driven Graphs</h4>
                         </a>
-                        <div style="height: 50px;"></div> <!-- Creates 50px of vertical space -->
-
+                        <div style="height: 50px;"></div>
                         <p class="text-black-50 mb-0">Our data-driven graphs provide visual insights into your investment performance, helping you track growth and make informed decisions!</p>
                     </div>
                 </div>
             </div>
-        </div>
-            <!-- Data Driven Graphs Row -->
+
+            <!-- Trending Stocks Row -->
             <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
                 <div class="col-xl-8 col-lg-7">
-                    <img class="img-fluid mb-3 mb-lg-0" src="{{ url_for('static', filename='assets/img/graph_data.jpg') }}" alt="Data Driven Graphs" />
+                    <img class="img-fluid mb-3 mb-lg-0" src="{{ url_for('static', filename='assets/img/stocks.jpg') }}" alt="Trending Stocks" />
                 </div>
                 <div class="col-xl-4 col-lg-5">
                     <div class="featured-text text-center text-lg-left">
                         <a href="/stocks" class="styledLink" id="customLink">
                             <h4>Trending Stocks</h4>
                         </a>
-                        <div style="height: 50px;"></div> <!-- Creates 50px of vertical space -->
-
-                        <p class="text-black-50 mb-0">At Stocks Insights, we bring you the latest trends and real-time updates on the stock market. Our platform offers a seamless experience where you can explore trending stocks of the day, stay informed with essential market data, and dive deeper into detailed insights for each stock</p>
+                        <div style="height: 50px;"></div>
+                        <p class="text-black-50 mb-0">At Stocks Insights, we bring you the latest trends and real-time updates on the stock market. Our platform offers a seamless experience where you can explore trending stocks of the day, stay informed with essential market data, and dive deeper into detailed insights for each stock.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Signup Section
-    <section class="signup-section" id="signup">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5">
-                <div class="col-md-10 col-lg-8 mx-auto text-center">
-                    <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
-                    <h2 class="text-white mb-5">Subscribe to receive updates!</h2>
-                    <form class="form-signup" id="contactForm" data-sb-form-api-token="API_TOKEN">
-                        <div class="row input-group-newsletter">
-                            <div class="col">
-                                <input class="form-control" id="emailAddress" type="email" placeholder="Enter email address..." aria-label="Enter email address..." data-sb-validations="required,email" />
-                            </div>
-                            <div class="col-auto">
-                                <button class="btn btn-primary disabled" id="submitButton" type="submit">Notify Me!</button>
-                            </div>
-                        </div>
-                        <div class="invalid-feedback mt-2" data-sb-feedback="emailAddress:required">An email is required.</div>
-                        <div class="invalid-feedback mt-2" data-sb-feedback="emailAddress:email">Email is not valid.</div>
-                        <div class="d-none" id="submitSuccessMessage">
-                            <div class="text-center mb-3 mt-2 text-white">
-                                <div class="fw-bolder">Form submission successful!</div>
-                                To activate this form, sign up at
-                                <br />
-                                <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                            </div>
-                        </div>
-                        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3 mt-2">Error sending message!</div></div>
-                    </form>
-                </div>
-            </div>
-        </div> 
-    </section>  -->
-
     <!-- Contact Section -->
-<section class="contact-section bg-black">
-    <div class="container px-4 px-lg-5">
-        <div class="text-center">
-            <h2 class="text-white mb-4">Contact Us</h2>
-            <p class="text-white-50 mb-0">Reach out with any questions or inquiries!</p>
-        </div>
+    <section class="contact-section bg-black">
+        <div class="container px-4 px-lg-5">
+            <div class="text-center">
+                <h2 class="text-white mb-4">Contact Us</h2>
+                <p class="text-white-50 mb-0">Reach out with any questions or inquiries!</p>
+            </div>
 
-       <div style="height: 50px;"></div>
-        <div class="row gx-4 gx-lg-5">
-            <div class="col-md-6">
-                <div class="bg-light rounded-3 p-4 border border-primary shadow">
-                    <h4 class="text-primary">Address</h4>
-                    <p class="text-black-50">Indira College of Engineering </p>
+            <div style="height: 50px;"></div>
+            <div class="row gx-4 gx-lg-5">
+                <div class="col-md-6">
+                    <div class="bg-light rounded-3 p-4 border border-primary shadow">
+                        <h4 class="text-primary">Address</h4>
+                        <p class="text-black-50">123 Future Fortune St, Financial City, FC 12345</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light rounded-3 p-4 border border-primary shadow">
+                        <h4 class="text-primary">Email</h4>
+                        <p class="text-black-50">contact@futurefortune.com</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="bg-light rounded-3 p-4 border border-primary shadow">
-                    <h4 class="text-primary">Gmail</h4>
-                    <p class="text-black-50">codinglovers315@gmail.com</p>
-                </div>
-            </div>
         </div>
-    </div>
-</section>
-
+    </section>
 
     <!-- Footer -->
-    <footer class="footer bg-black small text-center text-white-50">
-        <div class="container px-4 px-lg-5">Copyright 2024 &copy; FutureFortune Advisors | Plan Your Financial Future</div>
+    <footer class="bg-black small text-center text-white-50 footer >
+        <div class="container px-4 px-lg-5">Copyright &copy; FutureFortune Advisors</div>
     </footer>
 
-    <!-- Bootstrap core JS -->
-    <script src="{{ url_for( 'static' , filename = 'js/scripts3.js')}}" crossorigin="anonymous"></script>
-    <!-- Core theme JS -->
+    <!-- Bootstrap core JS and Theme JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/scripts2.js') }}"></script>
 </body>
 </html>
