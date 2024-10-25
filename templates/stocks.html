@@ -5,28 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stocks Listing</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+    <style>
+        /* Dark Theme Styling */
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #333333;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .navbar-toggler-icon {
+            filter: invert(1);
+        }
+        .table {
+            background-color: #1c1c1c;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th {
+            color: #cccccc;
+            background-color: #333333;
+        }
+        td {
+            color: #e6e6e6;
+        }
+        td, th {
+            border-color: #444444 !important;
+        }
+        a {
+            color: #66fcf1;
+        }
+        a:hover {
+            color: #45a29e;
+            text-decoration: none;
+        }
+        .table tbody tr:hover {
+            background-color: #333333;
+        }
+        h1 {
+            margin-top: 100px;
+            color: #66fcf1;
+        }
+        footer {
+            background-color: #222222;
+            color: #888888;
+            padding: 20px 0;
+            text-align: center;
+        }
+        footer a {
+            color: #66fcf1;
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: #45a29e;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav"  >
-        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" /></style> 
-           <div class="container px-4 px-lg-5">
-               <a class="navbar-brand" href="/">FutureFortune Advisors</a>
-               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                   Menu
-                   <i class="fas fa-bars"></i>
-               </button>
-               <div class="collapse navbar-collapse" id="navbarResponsive">
-                   <ul class="navbar-nav ms-auto">
-                       <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                       <li class="nav-item"><a class="nav-link" href="#Services">Services</a></li>
-                       <li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
-                   </ul>
-               </div>
-           </div>
-       </nav>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="/">FutureFortune Advisors</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#Services">Services</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#footer">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
     <div class="container mt-5">
         <h1 class="text-center">Trending Stocks</h1>
-        <table class="table table-bordered">
+        <table class="table table-bordered mt-4">
             <thead>
                 <tr>
                     <th>#</th>
@@ -47,5 +112,13 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <p>&copy; 2024 FutureFortune Advisors. All rights reserved.</p>
+            <p>Contact us: <a href="mailto:info@futurefortune.com">info@futurefortune.com</a></p>
+        </div>
+    </footer>
 </body>
 </html>
