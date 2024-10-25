@@ -41,10 +41,15 @@
             border-color: #444444 !important;
         }
         a {
-            color: #66fcf1;
+           
+         padding: 10px; /* Space inside the link */
+         margin: 5px; /* Space outside the link */
+         display: inline-block; /* Allows padding and margin to work */
+         text-decoration: none;
+
         }
         a:hover {
-            color: #45a29e;
+            color: #c1f0ed;
             text-decoration: none;
         }
         .table tbody tr:hover {
@@ -96,7 +101,7 @@
                 <tr>
                     <th>#</th>
                     <th>Stock Name</th>
-                    <th>Symbol</th>
+                    <th>Scrip Code</th>
                     <th>Price</th>
                 </tr>
             </thead>
@@ -104,9 +109,9 @@
                 {% for stock in stocks %}
                 <tr>
                     <td>{{ stock.id }}</td>
-                    <td><a href="{{ url_for('stock_detail', post_slug=stock.slug) }}">{{ stock.name }}</a></td>
-                    <td>{{ stock.symbol }}</td>
-                    <td>${{ stock.price }}</td>
+                    <td><a href="{{ url_for('stock_detail', scrip_code=stock.scripcode) }}">{{ stock.name }}</a></td>
+                    <td>{{ stock.scripcode }}</td>
+                    <td>₹{{ stock.price }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

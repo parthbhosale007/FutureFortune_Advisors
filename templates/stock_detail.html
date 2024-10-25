@@ -10,41 +10,33 @@
     <style>
         /* Dark Theme Styling */
         body {
-            background-color: #121212;
+            background: #121212;
             color: #ffffff;
             font-family: Arial, sans-serif;
         }
         .navbar {
-            background-color: #333333;
+            background-color: #121212;
         }
         .navbar-brand, .nav-link {
             color: #ffffff !important;
         }
-        .navbar-toggler {
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .navbar-toggler-icon {
-            filter: invert(1);
-        }
-        /* Centered Container */
+        /* Container Styles */
         .content-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 70px); /* Full viewport height minus navbar height */
+            margin: 50px auto;
+            max-width: 900px;
         }
-        .details-box {
+        .card {
             background-color: #1c1c1c;
-            padding: 30px;
+            border: none;
+            margin-bottom: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            text-align: center;
         }
-        h1 {
+        .card-header {
+            background-color: #333;
             color: #66fcf1;
-        }
-        p {
             font-size: 1.25em;
+        }
+        .card-body {
             color: #e6e6e6;
         }
         .btn-primary {
@@ -74,16 +66,53 @@
             </div>
         </nav>
     </header>
-
+     
     <div class="content-container">
-        <div class="details-box">
-            {% if stock %}
-            <h1>{{ stock.full_name }} ({{ stock.symbol }}) Stock Details</h1>
-            <p>Latest Close: ${{ stock.latest_close }}</p>
-            {% else %}
-            <h1>Stock not found</h1>
+        <h1 class="text-center">{{ stock.name }} : Stock Details</h1>
+        {% if stock %}
+        <div class="card">
+            <div class="card-header">Current Price</div>
+            <div class="card-body">
+                <h2>₹{{ stock.price }}</h2>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Industry Sector</div>
+            <div class="card-body">
+                <p>{{ stock.industry }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Day High / Low</div>
+            <div class="card-body">
+                <p><strong>High:</strong> ₹{{ stock.high }}</p>
+                <p><strong>Low:</strong> ₹{{ stock.low }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Year High / Low</div>
+            <div class="card-body">
+                <p><strong>Year High:</strong> ₹{{ stock.yearhigh }}</p>
+                <p><strong>Year Low:</strong> ₹{{ stock.yearlow }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Market Capitalization</div>
+            <div class="card-body">
+                <p>₹{{ stock.market_cap }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Total Traded Value</div>
+            <div class="card-body">
+                <p>₹{{ stock.totaltradedvalue }}</p>
+            </div>
+        </div>
+        {% else %}
+        <h1 class="text-center">Stock not found</h1>
         {% endif %}
-            <a href="{{ url_for('stock_list') }}" class="btn btn-primary">Back to all Stocks</a>
+        <div class="text-center">
+            <a href="{{ url_for('stock_list') }}" class="btn btn-primary mt-3">Back to all Stocks</a>
         </div>
     </div>
 
