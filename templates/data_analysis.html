@@ -50,7 +50,7 @@
                 backgroundColor: '#2B2B2B',
                 colors: ['#FF7043', '#29B6F6', '#66BB6A', '#FFA726'],
                 width: '100%',  // Set width to 100% for responsiveness
-                height: 400,
+                height: '100%',  // Set height to fill the container
                 titleTextStyle: {color: '#E0E0E0'}
             };
             var chart = new google.visualization.LineChart(document.getElementById(containerId));
@@ -72,6 +72,7 @@
             align-items: flex-start;
             padding: 20px;
             overflow-x: hidden;
+            height: 100vh; /* Full height for the body */
         }
         .dashboard {
             display: flex;
@@ -79,6 +80,7 @@
             gap: 20px;
             max-width: 1400px;
             width: 100%;
+            flex: 1; /* Allow dashboard to fill available space */
         }
         .chart-container {
             display: flex;
@@ -87,12 +89,12 @@
             background-color: #2B2B2B;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             border-radius: 12px;
-            overflow: hidden;
+            flex: 1; /* Allow container to fill available space */
         }
         .chart {
             flex: 2;
             width: 100%;  /* Set chart to take full width */
-            height: auto; /* Adjust height automatically */
+            height: 400px; /* Set fixed height for the chart */
         }
         .summary {
             flex: 1;
@@ -117,6 +119,10 @@
             .summary {
                 margin-left: 20px; /* Add space between chart and summary */
                 margin-top: 0; /* Reset margin when side by side */
+                flex: 1; /* Allow summary to fill available space */
+            }
+            .chart {
+                flex: 3; /* Allow chart to take more space */
             }
         }
     </style>
@@ -126,7 +132,7 @@
         <div class="chart-container">
             <div id="curve_chart1" class="chart"></div>
             <div class="summary">
-                <p>This chart visualizes stock trends for key tech companies over two years, highlighting growth trajectories in a dynamic sector.</p>
+                <p>This chart illustrates stock performance trends for major tech companies over a two-year period. It provides critical insights into their growth trajectories, helping investors analyze market behavior and make informed investment decisions based on historical data and current performance metrics.</p>
             </div>
         </div>
     </div>
