@@ -41,6 +41,7 @@ google-cloud-dialogflow==2.33.0
 googleapis-common-protos==1.65.0
 grpcio==1.67.0
 grpcio-status==1.48.2
+gunicorn
 h11==0.14.0
 h2==2.6.2
 hpack==3.0.0
