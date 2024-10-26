@@ -1,3 +1,4 @@
 # Ignore configuration files
 dialogueflow.json
 .env
+stk.json
