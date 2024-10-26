@@ -46,7 +46,7 @@
     </header>
 
     <!-- About Section -->
-    <section class="about-section text-center" id="about">
+    <section class="about-section text-center" id="about" >
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-lg-8">
@@ -63,10 +63,26 @@
     </section>
 
     <!-- Projects Section -->
-    <section class="projects-section bg-light" id="Services">
+    <section class="projects-section bg-light" id="Services" style="background: linear-gradient(to bottom, #383737, #2c2c2c);">
         <div class="container px-4 px-lg-5">
+            
+         <!-- Personalised Advise Row -->
+         <div class="row gx-0 mb-4 mb-lg-5 align-items-center" style="background-color: azure; border-radius: 10px; padding: 10px;">
+            <div class="col-xl-8 col-lg-7">
+                <img class="img-fluid mb-3 mb-lg-0" src="{{ url_for('static', filename='assets/img/advice.jpg') }}" alt="Personalised Advice" style=" height: 400px; width: 800px;"/>
+            </div>
+            <div class="col-xl-4 col-lg-5">
+                <div class="featured-text text-center text-lg-left">
+                    <a href="/advice" class="styledLink" id="customLink">
+                        <h4>Personalised Advice</h4>
+                    </a>
+                    <div style="height: 50px;"></div>
+                    <p class="text-black-50 mb-0"> Our platform provides tailored financial advice based on your unique profile. Whether you're aiming for long-term investments or short-term savings, we'll guide you to make the best financial decisions.</p>
+                </div>
+            </div>
+         </div>
             <!-- SIP Calculator Row -->
-            <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="row gx-0 mb-4 mb-lg-5 align-items-center"  style="background-color: azure; border-radius: 10px; padding: 10px;">
                 <div class="col-xl-8 col-lg-7">
                     <img class="img-fluid mb-3 mb-lg-0" src="{{ url_for('static', filename='assets/img/sipcalcpromt.jpg') }}" alt="SIP Calculator" />
                 </div>
@@ -82,7 +98,7 @@
             </div>
 
             <!-- AI Chatbot Row -->
-            <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="row gx-0 mb-4 mb-lg-5 align-items-center"  style="background-color: azure; border-radius: 10px; padding: 10px;" >
                 <div class="col-xl-8 col-lg-7">
                     <img class="img-fluid mb-3 mb-lg-0" src="{{ url_for('static', filename='assets/img/AI-Chatbots.jpg') }}" alt="AI Chatbot" />
                 </div>
@@ -98,7 +114,7 @@
             </div>
 
             <!-- Data Driven Graphs Row -->
-            <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="row gx-0 mb-4 mb-lg-5 align-items-center"  style="background-color: azure; border-radius: 10px; padding: 10px;">
                 <div class="col-xl-8 col-lg-7">
                     <img class="img-fluid mb-3 mb-lg-0" src="{{ url_for('static', filename='assets/img/graph_data.jpg') }}" alt="Data Driven Graphs" />
                 </div>
@@ -114,7 +130,7 @@
             </div>
 
             <!-- Trending Stocks Row -->
-            <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+            <div class="row gx-0 mb-4 mb-lg-5 align-items-center"  style="background-color: azure; border-radius: 10px; padding: 10px;">
                 <div class="col-xl-8 col-lg-7">
                     <img class="img-fluid mb-3 mb-lg-0" src="{{ url_for('static', filename='assets/img/stocks.jpg') }}" alt="Trending Stocks" />
                 </div>
@@ -129,6 +145,7 @@
                 </div>
             </div>
         </div>
+
     </section>
 
     <!-- Contact Section -->

@@ -9,7 +9,7 @@ import concurrent.futures
 app = Flask(__name__)
 
 # Load configuration
-with open('dialogflow.json') as config_file:
+with open('dialogueflow.json') as config_file:
     config = json.load(config_file)
     api_key = config.get("ALPHA_VANTAGE_API_KEY")
 
@@ -69,8 +69,8 @@ def contact():
 b = BSE(update_codes=True)
 
 compscrips = [
-   "500325",  # Reliance Industries Ltd.
     "500570",  # Tata Motors Ltd.
+    "500325",  # Reliance Industries Ltd.
     "500312",  # ONGC Ltd.
     "500290",  # MRF Ltd.
     "500209",  # Infosys Ltd.
@@ -166,6 +166,78 @@ def stock_detail(scrip_code):
     except Exception as e:
         print(f"Error fetching details for {scrip_code}: {e}")
         return "An error occurred while fetching stock details.", 500
+
+def get_additional_info(topic):
+    with open('more_info.txt', 'r') as file:
+        content = file.read()
+    
+    # Find the specific section based on the topic
+    sections = content.split('\n# ')
+    for section in sections:
+        if section.startswith(topic):
+            # Extract the paragraph (removing the topic name)
+            # print(section)
+            return section.replace(f"{topic}\n", "").strip()
+    
+    # print(f"No additional info found: {topic}")
+    return "No additional information available."
+    
+
+@app.route('/advice', methods=['GET', 'POST'])
+def personalized_advice():
+    if request.method == 'POST':
+        age = int(request.form['age'])
+        income = int(request.form['income'])
+        risk_tolerance = request.form['risk_tolerance']
+        financial_goal = request.form['financial_goal']
+
+        # Base advice
+        advice = f"Based on your age: {age}, income: {income}, risk tolerance: {risk_tolerance}, and financial goal: {financial_goal}, here are some personalized recommendations:"
+
+        # Define additional information
+        additional_info = ""
+
+        # Personalized investment advice based on user inputs
+        if age < 30:
+            if income > 1000000 and risk_tolerance == "high" and financial_goal == "long-term_investment":
+                advice += "\n\nYou're young with a high income and risk tolerance. We recommend equity-heavy SIPs or high-growth mutual funds for wealth generation."
+                additional_info = get_additional_info("SIP") + "\n\n" + get_additional_info("Mutual Funds")
+            elif income <= 1000000 and risk_tolerance == "medium" and financial_goal == "short-term_savings":
+                advice += "\n\nYou may consider balanced funds or short-term fixed deposits for preserving capital while seeking moderate growth."
+                additional_info = get_additional_info("Balanced Funds") + "\n\n" + get_additional_info("Fixed Deposits")
+            else:
+                advice += "\n\nConsider a mix of moderate-risk SIPs or debt-equity balanced funds for steady long-term growth."
+                additional_info = get_additional_info("Moderate-Risk SIPs") + "\n\n" + get_additional_info("Debt-Equity Balanced Funds")
+
+        elif 30 <= age <= 50:
+            if income > 1000000 and risk_tolerance == "medium" and financial_goal == "long-term_investment":
+                advice += "\n\nWith a solid income and moderate risk tolerance, a balanced portfolio of equity and debt mutual funds is ideal for long-term wealth creation."
+                additional_info = get_additional_info("Balanced Portfolio") + "\n\n" + get_additional_info("Mutual Funds")
+            elif income <= 1000000 and risk_tolerance == "low" and financial_goal == "retirement":
+                advice += "\n\nConsider conservative debt mutual funds or fixed-income schemes for retirement planning."
+                additional_info = get_additional_info("Debt Mutual Funds") + "\n\n" + get_additional_info("Fixed-Income Schemes")
+            else:
+                advice += "\n\nA mix of balanced funds with a conservative tilt is recommended for capital protection with growth potential."
+                additional_info = get_additional_info("Balanced Funds") + "\n\n" + get_additional_info("Conservative Investments")
+
+        elif age > 50:
+            if risk_tolerance == "low" and financial_goal == "retirement":
+                advice += "\n\nAs you're nearing retirement, prioritize capital preservation with low-risk instruments like fixed deposits or senior citizen savings schemes."
+                additional_info = get_additional_info("Fixed Deposits") + "\n\n" + get_additional_info("Senior Citizen Savings Schemes")
+            else:
+                advice += "\n\nIt's recommended to focus on debt-heavy mutual funds or annuity-based plans to ensure steady income during retirement."
+                additional_info = get_additional_info("Debt-Heavy Mutual Funds") + "\n\n" + get_additional_info("Annuity Plans")
+
+        else:
+            advice += "\n\nWe recommend reviewing your profile with a financial advisor to tailor the best strategy for you."
+            additional_info = get_additional_info("Financial Advisor")
+
+        # Return the advice along with additional information
+        return render_template('advice_result.html', advice=advice, additional_info=additional_info)
+
+    # Default render if no POST request (GET request)
+    return render_template('advice.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

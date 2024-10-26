@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ stock.name }} Details</title>
+    <title>Personalised Advice</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href=" {{ url_for( 'static' , filename = 'css/styles.css')}}">
     <style>
         /* Dark Theme Styling */
         body {
@@ -22,13 +23,14 @@
         }
         /* Container Styles */
         .content-container {
-            margin: 50px auto;
+            margin: 100px auto;
             max-width: 900px;
         }
         .card {
             background-color: #1c1c1c;
             border: none;
             margin-bottom: 20px;
+            margin: 50px;
             border-radius: 10px;
         }
         .card-header {
@@ -67,58 +69,18 @@
         </nav>
     </header>
      
-    <div class="content-container">
-        <h1 class="text-center">{{ stock.name }} : Stock Details</h1>
-        {% if stock %}
-        <div class="card">
-            <div class="card-header">Current Price</div>
-            <div class="card-body">
-                <h2>₹{{ stock.price }}</h2>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">Industry Sector</div>
-            <div class="card-body">
-                <p><strong>{{ stock.industry }}</strong></p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">Day High / Low</div>
-            <div class="card-body">
-                <p><strong>High:</strong> ₹{{ stock.high }}</p>
-                <p><strong>Low:</strong> ₹{{ stock.low }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">Year High / Low</div>
-            <div class="card-body">
-                <p><strong>Year High:</strong> ₹{{ stock.yearhigh }}</p>
-                <p><strong>Year Low:</strong> ₹{{ stock.yearlow }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">Market Capitalization</div>
-            <div class="card-body">
-                <p>₹{{ stock.market_cap }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">Total Traded Value</div>
-            <div class="card-body">
-                <p>₹{{ stock.totaltradedvalue }}</p>
-            </div>
-        </div>
-        {% else %}
-        <h1 class="text-center">Stock not found</h1>
-        {% endif %}
-        <div class="text-center">
-            <a href="{{ url_for('stock_list') }}" class="btn btn-primary mt-3">Back to all Stocks</a>
+    <div style=" height: 100px;"></div>
+    <div class="card">
+        <div class="card-header">Your Personalised Advice</div>
+        <div class="card-body">
+            <p>{{ advice }}</p>
         </div>
     </div>
-
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <div class="card">
+        <div class="card-header">More Information</div>
+        <div class="card-body">
+            <p>{{ additional_info }}</p>
+        </div>
+    </div>
 </body>
 </html>
