@@ -4,21 +4,48 @@ import json
 import uuid
 from google.cloud import dialogflow_v2 as dialogflow
 from bsedata.bse import BSE
+from google.oauth2 import service_account
 import concurrent.futures
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
 # Load configuration
-with open('dialogueflow.json') as config_file:
-    config = json.load(config_file)
-    api_key = config.get("ALPHA_VANTAGE_API_KEY")
+# with open('dialogueflow.json') as config_file:
+#     config = json.load(config_file)
+    # api_key = config.get("ALPHA_VANTAGE_API_KEY")
+
+load_dotenv()
+
+google_project_id = os.getenv("GOOGLE_PROJECT_ID")
+google_private_key = os.getenv("GOOGLE_PRIVATE_KEY")
+google_client_email = os.getenv("GOOGLE_CLIENT_EMAIL")
+google_client_id = os.getenv("GOOGLE_CLIENT_ID")
+google_auth_uri = os.getenv("GOOGLE_AUTH_URI")
+google_token_uri = os.getenv("GOOGLE_TOKEN_URI")
+google_auth_provider_cert_url = os.getenv("GOOGLE_AUTH_PROVIDER_CERT_URL")
+google_client_cert_url = os.getenv("GOOGLE_CLIENT_CERT_URL")
 
 # Set path to your Dialogflow service account credentials
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "dialogflow.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "dialogflow.json"
+
+# Create credentials using the service account information
+credentials = service_account.Credentials.from_service_account_info({
+    "type": "service_account",
+    "project_id": google_project_id,
+    "private_key_id": os.getenv("GOOGLE_PRIVATE_KEY_ID"),
+    "private_key": google_private_key.replace("\\n", "\n"),
+    "client_email": google_client_email,
+    "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+    "auth_uri": os.getenv("GOOGLE_AUTH_URI"),
+    "token_uri": os.getenv("GOOGLE_TOKEN_URI"),
+    "auth_provider_x509_cert_url": os.getenv("GOOGLE_AUTH_PROVIDER_CERT_URL"),
+    "client_x509_cert_url": os.getenv("GOOGLE_CLIENT_CERT_URL"),
+})
 
 # Initialize the Dialogflow session
 def detect_intent_texts(project_id, session_id, texts, language_code):
-    session_client = dialogflow.SessionsClient()
+    session_client = dialogflow.SessionsClient( credentials=credentials)
     session = session_client.session_path(project_id, session_id)
 
     for text in texts:
